@@ -9,6 +9,11 @@ import time
 # Replace the URL with your own IPwebcam shot.jpg IP:port (ip address according to the android ipwebcam not raspberry pi)
 url='http://192.168.188.244:8080/shot.jpg'
 
+width= 640
+height= 480
+
+writer= cv2.VideoWriter('basicvideo.mp4', cv2.VideoWriter_fourcc(*'DIVX'), 20, (width,height))
+
 
 while True:
     # Use urllib to get the image from the IP camera
@@ -23,6 +28,7 @@ while True:
 	
 	# put the image on screen
     cv2.imshow('IPWebcam',img)
+    writer.write(img)
 
     #To give the processor some less stress
     #time.sleep(0.1) 
@@ -30,3 +36,6 @@ while True:
     # Quit if q is pressed
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
+    
+writer.release()
+cv2.destroyAllWindows()
