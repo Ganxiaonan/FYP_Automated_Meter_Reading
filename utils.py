@@ -31,13 +31,14 @@ def preprocessing(roi):
     
     return roi
 
-def recognise_text(roi):
+def recognise_text(roi,tessdata):
+    final_text = ""
     roi = cv2.cvtColor(roi, cv2.COLOR_GRAY2BGR)
     img=roi
     image=roi.copy()
     barcodes=pyzbar.decode(image)
 
-    d=pytesseract.image_to_data(image,output_type=Output.DICT,lang='ssd_alphanum_plus')
+    d=pytesseract.image_to_data(image,output_type=Output.DICT,lang=tessdata)
     bboxes=len(d['level'])
     image[:] = (255,255,255) 
     for i in range(bboxes):
@@ -47,6 +48,13 @@ def recognise_text(roi):
         text=text.replace(" ","")
         text=text.replace("?","")
         text=text.replace("[","")
+        text=text.replace(":","")
+        text=text.replace("/","")
+        text=text.replace(".","")
+        text=text.replace("-","")
+        text=text.replace("b","h")
+        text=text.replace("D","0")
+        final_text = final_text + text
         #print(config)
 
         if config >= 30 and text !="":
@@ -54,5 +62,31 @@ def recognise_text(roi):
             cv2.putText(image,text,(x,y),cv2.FONT_HERSHEY_SIMPLEX,0.35,(0,0,0),1)
 #             print(text)
     
-    return text, img, image
+    return final_text, img, image
+
+def preprocessing_unit(roi):
+    # convert to gray scale
+    roi = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY)
     
+    # emlarge roi
+    roi = cv2.resize(roi, None, fx=6, fy=6, interpolation=cv2.INTER_CUBIC)
+    
+    roi = cv2.GaussianBlur(roi, (15,15), 0)
+    
+    #binarise roi
+    roi = cv2.adaptiveThreshold(roi, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 31, 2)
+    
+    kernel = np.ones((5,5),np.uint8)
+    roi = cv2.erode(roi,kernel,iterations = 1)
+    
+    roi = cv2.medianBlur(roi, 13)
+    roi = cv2.medianBlur(roi, 13)
+
+    kernel = np.ones((3,3),np.uint8)
+    roi = cv2.erode(roi,kernel,iterations = 1)
+    
+    roi = cv2.medianBlur(roi, 13)
+    
+    kernel = np.ones((3,3),np.uint8)
+    
+    return roi
