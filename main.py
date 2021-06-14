@@ -38,7 +38,7 @@ while (cap.isOpened()):
     
     i = i+1
     
-    if (i % 60 == 0):
+    if (i % 100 == 0):
         
         # crop image, only process roi
         roi = frame[y_min:y_max,x_min:x_max]

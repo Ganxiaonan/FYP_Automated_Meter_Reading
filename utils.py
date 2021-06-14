@@ -76,10 +76,14 @@ def preprocessing_unit(roi):
     #binarise roi
     roi = cv2.adaptiveThreshold(roi, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 31, 2)
     
-    kernel = np.ones((5,5),np.uint8)
-    roi = cv2.erode(roi,kernel,iterations = 1)
+    kernel = np.ones((3,3),np.uint8)
+    roi = cv2.dilate(roi,kernel,iterations = 1)
+    roi = cv2.erode(roi,kernel,iterations = 3)
     
     roi = cv2.medianBlur(roi, 13)
+    roi = cv2.medianBlur(roi, 13)
+    
+    roi = cv2.erode(roi,kernel,iterations = 1)
     roi = cv2.medianBlur(roi, 13)
 
     kernel = np.ones((3,3),np.uint8)
