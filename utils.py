@@ -94,3 +94,18 @@ def preprocessing_unit(roi):
     kernel = np.ones((3,3),np.uint8)
     
     return roi
+
+def calculate_electric_bill(diff_kwh):
+    if diff_kwh <= 0:
+        total_bill = 3
+    elif diff_kwh < 200:
+        total_bill = diff_kwh * 21.80
+    elif diff_kwh < 300:
+        total_bill = 200 * 21.80 + (diff_kwh - 200) * 33.40
+    elif diff_kwh < 600:
+        total_bill = 200 * 21.80 + 100 * 33.40 + (diff_kwh - 300) * 51.60
+    elif diff_kwh < 900:
+        total_bill = 200 * 21.80 + 100 * 33.40 + 300 * 51.60 + (diff_kwh - 600) * 54.60
+    elif diff_kwh > 900:
+        total_bill = 200 * 21.80 + 100 * 33.40 + 300 * 51.60 + 300 * 54.60 + (diff_kwh - 900) * 57.10
+    return total_bill

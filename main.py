@@ -16,6 +16,24 @@ print(client.get_list_database())
 #Setup Payload
 json_payload = []
 
+initial_kwh = 16000
+total_bill = 3
+
+data = {
+    "measurement": "electric_bill",
+    "tags": {
+        "unit": 'RM'
+    },
+    "time": datetime.now(pytz.timezone('Asia/Singapore')),
+    "fields": {
+        'value': float(total_bill),
+    }
+}
+json_payload.append(data)
+
+#Send our payload
+client.write_points(json_payload)
+
 # define region of interest (exclude unit)
 (x_min,y_min) = (120,210)
 (x_max,y_max) = (440,280)
@@ -79,6 +97,7 @@ while (cap.isOpened()):
                 #Send our payload
                 client.write_points(json_payload)
                 
+                
             if unit_text == 'kWh' or unit_text == 'kwh':
                 
                 roi = utils.preprocessing(roi)
@@ -108,6 +127,25 @@ while (cap.isOpened()):
              
                 #Send our payload
                 client.write_points(json_payload)
+                
+                diff_kwh = text - initial_kwh
+                total_bill = utils.calculate_electric_bill(diff_kwh)
+                
+                data = {
+                    "measurement": "electric_bill",
+                    "tags": {
+                        "unit": 'RM'
+                    },
+                    "time": datetime.now(pytz.timezone('Asia/Singapore')),
+                    "fields": {
+                        'value': float(total_bill),
+                    }
+                }
+                json_payload.append(data)
+             
+                #Send our payload
+                client.write_points(json_payload)
+                
                 
         except:
             i = i-1
