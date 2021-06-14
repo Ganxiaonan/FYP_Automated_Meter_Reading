@@ -109,3 +109,20 @@ def calculate_electric_bill(diff_kwh):
     elif diff_kwh > 900:
         total_bill = 200 * 21.80 + 100 * 33.40 + 300 * 51.60 + 300 * 54.60 + (diff_kwh - 900) * 57.10
     return total_bill
+
+def hconcat_resize(img_list, 
+                   interpolation 
+                   = cv2.INTER_CUBIC):
+      # take minimum hights
+    h_min = min(img.shape[0] 
+                for img in img_list)
+      
+    # image resizing 
+    im_list_resize = [cv2.resize(img,
+                       (int(img.shape[1] * h_min / img.shape[0]),
+                        h_min), interpolation
+                                 = interpolation) 
+                      for img in img_list]
+      
+    # return final image
+    return cv2.hconcat(im_list_resize)

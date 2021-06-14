@@ -155,6 +155,12 @@ while (cap.isOpened()):
             cv2.imshow('frame', frame)
             cv2.imshow('roi', roi)
             cv2.imshow('unit_roi', unit_roi)
+#             
+#             # function calling
+#             img_h_resize = utils.hconcat_resize([frame,roi,unit_roi])
+#               
+#             # show the Output image
+#             cv2.imshow('hconcat_resize.jpg', img_h_resize)
    
     
     if i > 10000:
