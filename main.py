@@ -45,6 +45,7 @@ client.write_points(json_payload)
 i = 0
 
 cap= cv2.VideoCapture("output2.mp4")
+# in case of live streaming use cap= cv2.VideoCapture(0)
 
 # Check if camera opened successfully
 if (cap.isOpened()== False):
@@ -63,7 +64,7 @@ while (cap.isOpened()):
         unit_roi = frame[unit_y_min:unit_y_max,unit_x_min:unit_x_max]
 
         unit_roi=  utils.preprocessing_unit(unit_roi)
-        unit_text,unit_roi,unit_detection = utils.recognise_text(unit_roi,'eng1')
+        unit_text,unit_roi,unit_detection = utils.recognise_text(unit_roi,'eng')
         
         try:
         
